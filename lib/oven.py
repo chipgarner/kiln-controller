@@ -305,6 +305,7 @@ class Max31856(TempSensorReal):
         temp = self.thermocouple.temperature
         for k,v in self.thermocouple.fault.items():
             if v:
+                log.warning('31856 error: ' + str(k))
                 raise Max31856_Error(k)
         return temp
 

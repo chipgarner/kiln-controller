@@ -8,7 +8,7 @@ import busio
 #   General options
 
 ### Logging
-log_level = logging.INFO
+log_level = logging.WARNING
 log_format = '%(asctime)s %(levelname)s %(name)s: %(message)s'
 
 ### Server
@@ -116,7 +116,7 @@ stop_integral_windup = True
 ########################################################################
 #
 #   Simulation parameters
-simulate = True
+simulate = False
 sim_t_env      = 65   # deg
 sim_c_heat     = 500.0  # J/K  heat capacity of heat element
 sim_c_oven     = 5000.0 # J/K  heat capacity of oven
@@ -172,7 +172,7 @@ thermocouple_offset=0
 # The larger the number, the more load on the board. K type 
 # thermocouples have a precision of about 1/2 degree C. 
 # The median of these samples is used for the temperature.
-temperature_average_samples = 40 
+temperature_average_samples = 10
 
 # Thermocouple AC frequency filtering - set to True if in a 50Hz locale, else leave at False for 60Hz locale
 ac_freq_50hz = False
