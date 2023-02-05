@@ -8,7 +8,7 @@ import busio
 #   General options
 
 ### Logging
-log_level = logging.WARNING
+log_level = logging.DEBUG
 log_format = '%(asctime)s %(levelname)s %(name)s: %(message)s'
 
 ### Server
@@ -49,11 +49,11 @@ currency_type   = "$"   # Currency Symbol to show when calculating cost to run j
 # zero-cross solid-state-relay.
 try:
     import board
-    spi_sclk  = board.D11 #spi clock
-    spi_mosi  = board.D10 #spi Microcomputer Out Serial In (not connected) 
-    spi_miso  = board.D9  #spi Microcomputer In Serial Out
-    spi_cs    = board.D5  #spi Chip Select
-    gpio_heat = board.D23 #output that controls relay
+    spi_sclk  = board.SCK #spi clock
+    spi_mosi  = board.MOSI #spi Microcomputer Out Serial In (not connected)
+    spi_miso  = board.MISO  #spi Microcomputer In Serial Out
+    spi_cs    = board.GPIO5  #spi Chip Select
+    gpio_heat = board.GPIO2 #output that controls relay
 except NotImplementedError:
     print("not running on blinka recognized board, probably a simulation")
 
@@ -116,7 +116,7 @@ stop_integral_windup = True
 ########################################################################
 #
 #   Simulation parameters
-simulate = False
+simulate = True
 sim_t_env      = 65   # deg
 sim_c_heat     = 500.0  # J/K  heat capacity of heat element
 sim_c_oven     = 5000.0 # J/K  heat capacity of oven
@@ -128,7 +128,7 @@ sim_R_ho_air   = 0.05   # K/W  " with internal air circulation
 
 # if you want simulations to happen faster than real time, this can be
 # set as high as 1000 to speed simulations up by 1000 times.
-sim_speedup_factor = 1
+sim_speedup_factor = 1000
 
 
 ########################################################################
