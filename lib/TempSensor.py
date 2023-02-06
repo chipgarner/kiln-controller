@@ -88,8 +88,7 @@ class TempSensorReal(TempSensor):
            config.temperature_average_samples
     """
 
-    def __init__(self, config):
-        self.config = config
+    def __init__(self):
         TempSensor.__init__(self)
         self.sleeptime = self.time_step / float(self.config.temperature_average_samples)
         self.temptracker = TempTracker()
@@ -180,7 +179,8 @@ class ThermocoupleTracker:
 class Max31855(TempSensorReal):
     """each subclass expected to handle errors and get temperature"""
 
-    def __init__(self):
+    def __init__(self, config):
+        self.config = config
         TempSensorReal.__init__(self)
         log.info("thermocouple MAX31855")
         import adafruit_max31855
@@ -274,7 +274,8 @@ class Max31856_Error(ThermocoupleError):
 class Max31856(TempSensorReal):
     """each subclass expected to handle errors and get temperature"""
 
-    def __init__(self):
+    def __init__(self, config):
+        self.config = config
         TempSensorReal.__init__(self)
         log.info("thermocouple MAX31856")
         import adafruit_max31856
