@@ -289,7 +289,7 @@ class Oven(threading.Thread):
 class SimulatedOven(Oven):
 
     def __init__(self):
-        self.board = SimulatedBoard()
+        self.board = SimulatedBoard(config)
         self.t_env = config.sim_t_env
         self.c_heat = config.sim_c_heat
         self.c_oven = config.sim_c_oven
@@ -399,7 +399,7 @@ class SimulatedOven(Oven):
 class RealOven(Oven):
 
     def __init__(self):
-        self.board = RealBoard()
+        self.board = RealBoard(config)
         self.output = Output()
         self.reset()
 
