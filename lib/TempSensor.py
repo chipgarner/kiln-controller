@@ -41,9 +41,9 @@ class RealBoard(Board):
 
     def choose_tempsensor(self):
         if self.config.max31855:
-            return Max31855()
+            return Max31855(self.config)
         if self.config.max31856:
-            return Max31856()
+            return Max31856(self.config)
 
 
 class SimulatedBoard(Board):
@@ -91,7 +91,7 @@ class TempSensorReal(TempSensor):
     def __init__(self):
         TempSensor.__init__(self)
         self.sleeptime = self.time_step / float(self.config.temperature_average_samples)
-        self.temptracker = TempTracker()
+        self.temptracker = TempTracker(self.config.temperature_average_samples)
         self.spi = busio.SPI(self.config.spi_sclk, self.config.spi_mosi, self.config.spi_miso)
         self.cs = digitalio.DigitalInOut(self.config.spi_cs)
 
@@ -191,8 +191,8 @@ class Max31855(TempSensorReal):
             return self.thermocouple.temperature_NIST
         except RuntimeError as rte:
             if rte.args and rte.args[0]:
-                raise Max31855_Error(rte.args[0])
-            raise Max31855_Error('unknown')
+                raise Max31855_Error(rte.args[0], self.config)
+            raise Max31855_Error('unknown', self.config)
 
 
 class ThermocoupleError(Exception):
@@ -243,7 +243,8 @@ class Max31855_Error(ThermocoupleError):
     All children must set self.orig_message and self.map
     """
 
-    def __init__(self, message):
+    def __init__(self, message, config):
+        self.config = config
         self.orig_message = message
         # this purposefully makes "fault reading" and
         # "Total thermoelectric voltage out of range..." unknown errors
@@ -256,7 +257,8 @@ class Max31855_Error(ThermocoupleError):
 
 
 class Max31856_Error(ThermocoupleError):
-    def __init__(self, message):
+    def __init__(self, message, config):
+        self.config = config
         self.orig_message = message
         self.map = {
             "cj_range": "cold junction range fault",
@@ -296,5 +298,5 @@ class Max31856(TempSensorReal):
         for k, v in self.thermocouple.fault.items():
             if v:
                 log.warning('31856 error: ' + str(k))
-                raise Max31856_Error(k)
+                raise Max31856_Error(k, self.config)
         return temp
