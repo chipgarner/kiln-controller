@@ -1,4 +1,5 @@
 import lib.TempSensor as TempSensor
+import time
 
 
 def test_sim():
@@ -14,12 +15,16 @@ def test_me():
 
     temp = max56.raw_temp()
 
-    assert temp == 7
+    assert type(temp) is float
+    assert temp > 10
 
 
 def test_it():
     brd = TempSensor.RealBoard()
 
+    time.sleep(10)
+
     temp = brd.temp_sensor.temperature()
 
+    assert type(temp) is float
     assert temp == 9
