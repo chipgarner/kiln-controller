@@ -1,15 +1,8 @@
 import lib.TempSensor as TempSensor
 import time
-from test_configs import config
+from test_configs import max31855hardware as config
 
-
-def test_sim():
-    sim_ts = TempSensor.SimulatedBoard(config)
-
-    temp = sim_ts.temp_sensor.temperature()
-
-    assert temp == 65
-
+# Requires a board connected to a MAX31855 and thermocouple using hardware SPI pins
 
 def test_raw_temp():
     brd = TempSensor.RealBoard(config)
