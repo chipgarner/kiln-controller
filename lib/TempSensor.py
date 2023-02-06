@@ -92,7 +92,12 @@ class TempSensorReal(TempSensor):
         TempSensor.__init__(self)
         self.sleeptime = self.time_step / float(self.config.temperature_average_samples)
         self.temptracker = TempTracker(self.config.temperature_average_samples)
-        self.spi = busio.SPI(self.config.spi_sclk, self.config.spi_mosi, self.config.spi_miso)
+
+        try:
+            self.spi = busio.SPI(self.config.spi_sclk, self.config.spi_mosi, self.config.spi_miso)
+        except ValueError:
+            self.spi = bitbangio.SPI(self.config.spi_sclk, self.config.spi_mosi, self.config.spi_miso)
+
         self.cs = digitalio.DigitalInOut(self.config.spi_cs)
 
     def get_temperature(self):
