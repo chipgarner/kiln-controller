@@ -3,7 +3,7 @@ import os
 import json
 
 
-def get_profile(file="test-fast.json"):
+def get_profile(file="test_profiles/test-fast.json"):
     profile_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Test', file))
     print(profile_path)
     with open(profile_path) as infile:
@@ -37,7 +37,7 @@ def test_find_time_from_temperature():
 
 
 def test_find_time_odd_profile():
-    profile = get_profile("test-cases.json")
+    profile = get_profile("test_profiles/test-cases.json")
 
     time = profile.find_next_time_from_temperature(500)
     assert time == 4200

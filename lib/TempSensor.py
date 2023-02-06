@@ -3,15 +3,15 @@ import bitbangio
 import statistics
 import logging
 import threading
-import config
 import digitalio
 import time
+from abc import ABC
 
 log = logging.getLogger(__name__)
 
 
 # wrapper for blinka board
-class Board:
+class Board():
     """This represents a blinka board where this code
     runs.
     """
@@ -27,7 +27,8 @@ class RealBoard(Board):
     board is automatically detected by blinka.
     """
 
-    def __init__(self):
+    def __init__(self, config):
+        self.config = config
         self.name = None
         self.load_libs()
         self.temp_sensor = self.choose_tempsensor()
@@ -37,11 +38,11 @@ class RealBoard(Board):
         import board
         self.name = board.board_id
 
-    @staticmethod
-    def choose_tempsensor():
-        if config.max31855:
+
+    def choose_tempsensor(self):
+        if self.config.max31855:
             return Max31855()
-        if config.max31856:
+        if self.config.max31856:
             return Max31856()
 
 
@@ -50,9 +51,9 @@ class SimulatedBoard(Board):
     See config.simulate
     """
 
-    def __init__(self):
+    def __init__(self, config):
         self.name = "simulated"
-        self.temp_sensor = TempSensorSimulated()
+        self.temp_sensor = TempSensorSimulated(config)
         Board.__init__(self)
 
 
@@ -64,16 +65,17 @@ class TempSensor(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         self.daemon = True
-        self.time_step = config.sensor_time_wait
-        self.status = ThermocoupleTracker()
+        self.time_step = self.config.sensor_time_wait
+        self.status = ThermocoupleTracker(self.config.temperature_average_samples)
 
 
 class TempSensorSimulated(TempSensor):
     """Simulates a temperature sensor """
 
-    def __init__(self):
+    def __init__(self, config):
+        self.config = config
         TempSensor.__init__(self)
-        self.simulated_temperature = config.sim_t_env
+        self.simulated_temperature = self.config.sim_t_env
 
     def temperature(self):
         return self.simulated_temperature
@@ -86,18 +88,19 @@ class TempSensorReal(TempSensor):
            config.temperature_average_samples
     """
 
-    def __init__(self):
+    def __init__(self, config):
+        self.config = config
         TempSensor.__init__(self)
-        self.sleeptime = self.time_step / float(config.temperature_average_samples)
+        self.sleeptime = self.time_step / float(self.config.temperature_average_samples)
         self.temptracker = TempTracker()
-        self.spi = busio.SPI(config.spi_sclk, config.spi_mosi, config.spi_miso)
-        self.cs = digitalio.DigitalInOut(config.spi_cs)
+        self.spi = busio.SPI(self.config.spi_sclk, self.config.spi_mosi, self.config.spi_miso)
+        self.cs = digitalio.DigitalInOut(self.config.spi_cs)
 
     def get_temperature(self):
         """read temp from tc and convert if needed"""
         try:
             temp = self.raw_temp()  # raw_temp provided by subclasses
-            if config.temp_scale.lower() == "f":
+            if self.config.temp_scale.lower() == "f":
                 temp = (temp * 9 / 5) + 32
             self.status.good()
             return temp
@@ -127,8 +130,8 @@ class TempTracker:
        config.sensor_time_wait
     """
 
-    def __init__(self):
-        self.size = config.temperature_average_samples
+    def __init__(self, temperature_average_samples):
+        self.size = temperature_average_samples
         self.temps = [0 for i in range(self.size)]
 
     def add(self, temp):
@@ -149,8 +152,8 @@ class ThermocoupleTracker:
        over the last two duty cycles.
     """
 
-    def __init__(self):
-        self.size = config.temperature_average_samples * 2
+    def __init__(self, temperature_average_samples):
+        self.size = temperature_average_samples * 2
         self.status = [True for i in range(self.size)]
         self.limit = 30
 
@@ -207,25 +210,25 @@ class ThermocoupleError(Exception):
         super().__init__(self.message)
 
     def set_ignore(self):
-        if self.message == "not connected" and config.ignore_tc_lost_connection == True:
+        if self.message == "not connected" and self.config.ignore_tc_lost_connection == True:
             self.ignore = True
-        if self.message == "short circuit" and config.ignore_tc_short_errors == True:
+        if self.message == "short circuit" and self.config.ignore_tc_short_errors == True:
             self.ignore = True
-        if self.message == "unknown" and config.ignore_tc_unknown_error == True:
+        if self.message == "unknown" and self.config.ignore_tc_unknown_error == True:
             self.ignore = True
-        if self.message == "cold junction range fault" and config.ignore_tc_cold_junction_range_error == True:
+        if self.message == "cold junction range fault" and self.config.ignore_tc_cold_junction_range_error == True:
             self.ignore = True
-        if self.message == "thermocouple range fault" and config.ignore_tc_range_error == True:
+        if self.message == "thermocouple range fault" and self.config.ignore_tc_range_error == True:
             self.ignore = True
-        if self.message == "cold junction temp too high" and config.ignore_tc_cold_junction_temp_high == True:
+        if self.message == "cold junction temp too high" and self.config.ignore_tc_cold_junction_temp_high == True:
             self.ignore = True
-        if self.message == "cold junction temp too low" and config.ignore_tc_cold_junction_temp_low == True:
+        if self.message == "cold junction temp too low" and self.config.ignore_tc_cold_junction_temp_low == True:
             self.ignore = True
-        if self.message == "thermocouple temp too high" and config.ignore_tc_temp_high == True:
+        if self.message == "thermocouple temp too high" and self.config.ignore_tc_temp_high == True:
             self.ignore = True
-        if self.message == "thermocouple temp too low" and config.ignore_tc_temp_low == True:
+        if self.message == "thermocouple temp too low" and self.config.ignore_tc_temp_low == True:
             self.ignore = True
-        if self.message == "voltage too high or low" and config.ignore_tc_voltage_error == True:
+        if self.message == "voltage too high or low" and self.config.ignore_tc_voltage_error == True:
             self.ignore = True
 
     def map_message(self):
@@ -276,8 +279,8 @@ class Max31856(TempSensorReal):
         log.info("thermocouple MAX31856")
         import adafruit_max31856
         self.thermocouple = adafruit_max31856.MAX31856(self.spi, self.cs,
-                                                       thermocouple_type=config.thermocouple_type)
-        if config.ac_freq_50hz:
+                                                       thermocouple_type=self.config.thermocouple_type)
+        if self.config.ac_freq_50hz:
             self.thermocouple.noise_rejection = 50
         else:
             self.thermocouple.noise_rejection = 60

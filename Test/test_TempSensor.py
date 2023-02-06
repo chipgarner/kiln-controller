@@ -1,28 +1,29 @@
 import lib.TempSensor as TempSensor
 import time
+from test_configs import config
 
 
 def test_sim():
-    sim_ts = TempSensor.SimulatedBoard()
+    sim_ts = TempSensor.SimulatedBoard(config)
 
     temp = sim_ts.temp_sensor.temperature()
 
     assert temp == 65
 
 
-def test_me():
-    max56 = TempSensor.Max31856()
+def test_raw_temp():
+    brd = TempSensor.RealBoard(config)
 
-    temp = max56.raw_temp()
+    temp = brd.temp_sensor.raw_temp()
 
     assert type(temp) is float
     assert temp > 10
 
 
-def test_it():
-    brd = TempSensor.RealBoard()
+def test_all_slow():
+    brd = TempSensor.RealBoard(config)
 
-    time.sleep(10)
+    time.sleep(2)
 
     temp = brd.temp_sensor.temperature()
     temps = brd.temp_sensor.temptracker.temps
