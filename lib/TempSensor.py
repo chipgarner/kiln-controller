@@ -299,6 +299,7 @@ class Max31856(TempSensorReal):
         # dict named self.thermocouple.fault. Here we check that
         # dict for errors and raise an exception.
         # and raise Max31856_Error(message)
+        log.debug('Called 31856 raw_temp')
         temp = self.thermocouple.temperature
         for k, v in self.thermocouple.fault.items():
             if v:
