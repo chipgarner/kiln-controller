@@ -25,6 +25,16 @@ def test_it():
     time.sleep(10)
 
     temp = brd.temp_sensor.temperature()
+    temps = brd.temp_sensor.temptracker.temps
+
+    print(str(temps))
 
     assert type(temp) is float
-    assert temp == 9
+    assert temp > 9
+    assert len(temps) == 10
+
+    count = 0
+    for t in temps:
+        if t > 0:
+            count += 1
+    assert count > 1  # This tests the thread ran
