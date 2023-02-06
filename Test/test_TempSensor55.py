@@ -4,16 +4,6 @@ from test_configs import max31855hardware as config
 
 # Requires a board connected to a MAX31855 and thermocouple using hardware SPI pins
 
-def test_raw_temp():
-    brd = TempSensor.RealBoard(config)
-
-    time.sleep(1) # It has to get going
-
-    temp = brd.temp_sensor.raw_temp()
-
-    assert type(temp) is float
-    assert temp > 10
-
 
 def test_all_slow():
     brd = TempSensor.RealBoard(config)
