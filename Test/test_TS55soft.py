@@ -1,8 +1,9 @@
 import lib.TempSensor as TempSensor
 import time
-from test_configs import max31855software as config
+# from test_configs import max31855software as config
+from test_configs import max31856software as config
 
-# Requires a board connected to a MAX31855 and thermocouple using hardware SPI pins
+# Requires a board connected to a MAX31855 or MAX318856 and thermocouple using hardware SPI pins
 
 
 def test_raw_temp():

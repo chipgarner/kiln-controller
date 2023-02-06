@@ -49,9 +49,9 @@ currency_type   = "$"   # Currency Symbol to show when calculating cost to run j
 # zero-cross solid-state-relay.
 try:
     import board
-    spi_sclk  = board.SCK #spi clock
-    spi_mosi  = board.MOSI #spi Microcomputer Out Serial In (not connected)
-    spi_miso  = board.MISO  #spi Microcomputer In Serial Out
+    spi_sclk  = board.D22 #spi clock
+    spi_mosi  = board.D10 #spi Microcomputer Out Serial In (not connected)
+    spi_miso  = board.D17  #spi Microcomputer In Serial Out
     spi_cs    = board.D5  #spi Chip Select
     gpio_heat = board.D23 #output that controls relay
 except NotImplementedError:
