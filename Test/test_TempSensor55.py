@@ -7,6 +7,8 @@ from test_configs import max31855hardware as config
 def test_raw_temp():
     brd = TempSensor.RealBoard(config)
 
+    time.sleep(1) # It has to get going
+
     temp = brd.temp_sensor.raw_temp()
 
     assert type(temp) is float
