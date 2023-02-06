@@ -67,8 +67,8 @@ except NotImplementedError:
 max31855 = 0
 max31856 = 1
 # uncomment these two lines if using MAX-31856
-# import adafruit_max31856
-# thermocouple_type = adafruit_max31856.ThermocoupleType.K
+import adafruit_max31856
+thermocouple_type = adafruit_max31856.ThermocoupleType.K
 
 # here are the possible max-31856 thermocouple types
 #   ThermocoupleType.B
