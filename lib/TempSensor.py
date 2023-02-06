@@ -1,5 +1,5 @@
 import busio
-import bitbangio
+import adafruit_bitbangio as bitbangio
 import statistics
 import logging
 import threading
