@@ -1,6 +1,6 @@
 import lib.TempSensor as TempSensor
 import time
-from test_configs import max31855hardware as config
+from test_configs import max31855software as config
 
 # Requires a board connected to a MAX31855 and thermocouple using hardware SPI pins
 
