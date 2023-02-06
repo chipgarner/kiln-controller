@@ -52,8 +52,8 @@ try:
     spi_sclk  = board.SCK #spi clock
     spi_mosi  = board.MOSI #spi Microcomputer Out Serial In (not connected)
     spi_miso  = board.MISO  #spi Microcomputer In Serial Out
-    spi_cs    = board.GPIO5  #spi Chip Select
-    gpio_heat = board.GPIO2 #output that controls relay
+    spi_cs    = board.D5  #spi Chip Select
+    gpio_heat = board.D23 #output that controls relay
 except NotImplementedError:
     print("not running on blinka recognized board, probably a simulation")
 

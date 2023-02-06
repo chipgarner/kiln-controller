@@ -12,6 +12,14 @@ def test_sim():
 def test_me():
     max56 = TempSensor.Max31856()
 
+    temp = max56.raw_temp()
+
+    assert temp == 7
+
 
 def test_it():
-    sim_ts = TempSensor.RealBoard()
+    brd = TempSensor.RealBoard()
+
+    temp = brd.temp_sensor.temperature()
+
+    assert temp == 9
