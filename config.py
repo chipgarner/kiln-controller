@@ -49,14 +49,13 @@ currency_type   = "$"   # Currency Symbol to show when calculating cost to run j
 # zero-cross solid-state-relay.
 try:
     import board
-    spi_sclk  = board.SCK #spi clock
-    spi_mosi  = board.MOSI #spi Microcomputer Out Serial In (not connected)
-    spi_miso  = board.MISO  #spi Microcomputer In Serial Out
-    #spi_cs    = board.D5  #spi Chip Select
-    #spi_sclk  = board.D22 #spi clock
-    #spi_mosi  = board.D17 #spi Microcomputer Out Serial In (MAX31856 only)
-    #spi_miso  = board.D27  #spi Microcomputer In Serial Out
-    spi_cs    = board.D5  #spi Chip Select
+    # spi_mosi  = board.MOSI #spi Microcomputer Out Serial In (not connected)
+    # spi_miso  = board.MISO  #spi Microcomputer In Serial Out
+    # spi_cs    = board.D5  #spi Chip Select
+    spi_sclk  = board.D22 #spi clock
+    spi_mosi  = board.D17 #spi Microcomputer Out Serial In (MAX31856 only)
+    spi_miso  = board.D27  #spi Microcomputer In Serial Out
+    spi_cs    = board.D6  #spi Chip Select
     gpio_heat = board.D23 #output that controls relay
 except NotImplementedError:
     print("not running on blinka recognized board, probably a simulation")
