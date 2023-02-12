@@ -49,14 +49,14 @@ currency_type   = "$"   # Currency Symbol to show when calculating cost to run j
 # zero-cross solid-state-relay.
 try:
     import board
-    # spi_sclk  = board.SCK #spi clock
-    # spi_mosi  = board.MOSI #spi Microcomputer Out Serial In (not connected)
-    # spi_miso  = board.MISO  #spi Microcomputer In Serial Out
-    # spi_cs    = board.D5  #spi Chip Select
-    spi_sclk  = board.D22 #spi clock
-    spi_mosi  = board.D27 #spi Microcomputer Out Serial In (MAX31856 only)
-    spi_miso  = board.D17  #spi Microcomputer In Serial Out
-    spi_cs    = board.D6  #spi Chip Select
+    spi_sclk  = board.SCK #spi clock
+    spi_mosi  = board.MOSI #spi Microcomputer Out Serial In (not connected)
+    spi_miso  = board.MISO  #spi Microcomputer In Serial Out
+    #spi_cs    = board.D5  #spi Chip Select
+    #spi_sclk  = board.D22 #spi clock
+    #spi_mosi  = board.D17 #spi Microcomputer Out Serial In (MAX31856 only)
+    #spi_miso  = board.D27  #spi Microcomputer In Serial Out
+    spi_cs    = board.D5  #spi Chip Select
     gpio_heat = board.D23 #output that controls relay
 except NotImplementedError:
     print("not running on blinka recognized board, probably a simulation")
@@ -64,11 +64,11 @@ except NotImplementedError:
 ### Thermocouple Adapter selection:
 #   max31855 - bitbang SPI interface
 #   max31856 - bitbang SPI interface. must specify thermocouple_type.
-max31855 = 1
-max31856 = 0
+max31855 = 0
+max31856 = 1
 # uncomment these two lines if using MAX-31856
-# import adafruit_max31856
-# thermocouple_type = adafruit_max31856.ThermocoupleType.K
+import adafruit_max31856
+thermocouple_type = adafruit_max31856.ThermocoupleType.K
 
 # here are the possible max-31856 thermocouple types
 #   ThermocoupleType.B
@@ -150,7 +150,7 @@ time_scale_profile  = "m" # s = Seconds | m = Minutes | h = Hours - Enter and vi
 # naturally cool off. If your SSR has failed/shorted/closed circuit, this
 # means your kiln receives full power until your house burns down.
 # this should not replace you watching your kiln or use of a kiln-sitter
-emergency_shutoff_temp = 2264 #cone 7
+emergency_shutoff_temp = 3264 #cone 7
 
 # If the current temperature is outside the pid control window,
 # delay the schedule until it does back inside. This allows for heating
@@ -164,7 +164,7 @@ kiln_must_catch_up = True
 # or 100% off because the kiln is too hot. No integral builds up
 # outside the window. The bigger you make the window, the more
 # integral you will accumulate. This should be a positive integer.
-pid_control_window = 5 #degrees
+pid_control_window = 50 #degrees
 
 # thermocouple offset
 # If you put your thermocouple in ice water and it reads 36F, you can
@@ -194,21 +194,21 @@ ac_freq_50hz = False
 #
 # You should only set these to True if you experience a problem
 # and WANT to ignore it to complete a firing.
-ignore_temp_too_high = False
-ignore_tc_lost_connection = False
-ignore_tc_cold_junction_range_error = False
-ignore_tc_range_error = False
-ignore_tc_cold_junction_temp_high = False
-ignore_tc_cold_junction_temp_low = False
-ignore_tc_temp_high = False
-ignore_tc_temp_low = False
-ignore_tc_voltage_error = False
-ignore_tc_short_errors = False 
-ignore_tc_unknown_error = False
+ignore_temp_too_high = True
+ignore_tc_lost_connection = True
+ignore_tc_cold_junction_range_error = True
+ignore_tc_range_error = True
+ignore_tc_cold_junction_temp_high = True
+ignore_tc_cold_junction_temp_low = True
+ignore_tc_temp_high = True
+ignore_tc_temp_low = True
+ignore_tc_voltage_error = True
+ignore_tc_short_errors = True 
+ignore_tc_unknown_error = True
 
 # This overrides all possible thermocouple errors and prevents the 
 # process from exiting.
-ignore_tc_too_many_errors = False
+ignore_tc_too_many_errors = True
 
 ########################################################################
 # automatic restarts - if you have a power brown-out and the raspberry pi

@@ -42,3 +42,4 @@ def test_all_slow():
         if t > 0:
             count += 1
     assert count > 1  # This tests the thread ran
+
